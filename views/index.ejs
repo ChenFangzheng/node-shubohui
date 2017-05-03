@@ -15,7 +15,12 @@
   <p>Welcome to
     <%= title %>
   </p>
-  <img src='http://localhost:3000/qrcode/1/2/3' />
+  <img id="image" src='http://localhost:3000/qrcode/1/2/3' />
+
+  <script>
+    var img = document.getElementById("image")
+    img.src = "http://localhost:3000/qrcode/4/5/6";
+  </script>
 </body>
 
 </html>
