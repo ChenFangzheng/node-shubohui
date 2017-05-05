@@ -1,0 +1,7 @@
+apps:
+    - script: ws_server.js
+      instances: 1
+    - script: ./bin/www
+      instances: 2
+      exec_mode: cluster
+

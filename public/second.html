@@ -12,53 +12,63 @@
             padding: 0px;
             margin: 0px;
         }
-        
-        p {
-            line-height: 18px;
-        }
-        
-        div {
-            width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        #content {
-            padding: 5px;
-            background: #ddd;
-            border-radius: 5px;
-            overflow-y: scroll;
-            border: 1px solid #CCC;
-            margin-top: 10px;
-            height: 160px;
-        }
-        
-        #input {
-            border-radius: 2px;
-            border: 1px solid #ccc;
-            margin-top: 10px;
-            padding: 5px;
-            width: 400px;
-        }
-        
-        #status {
-            width: 88px;
-            display: block;
-            float: left;
-            margin-top: 15px;
-        }
     </style>
 </head>
 
 <body>
     <div id="content"></div>
-    <div>
-        <span id="status">Connecting...</span>
-        <input type="text" id="input" disabled="disabled" />
-    </div>
-
     <script src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
-    <script src="./javascripts/ws_client.js"></script>
+    <script>
+        var content = $('#content');
+        // if user is running mozilla then use it's built-in WebSocket
+        window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+        // if browser doesn't support WebSocket, just show some notification and exit
+        if (!window.WebSocket) {
+            content.html($('<p>', {
+                text: 'Sorry, but your browser doesn\'t '
+                + 'support WebSockets.'
+            }));
+        }
+
+        // open connection
+        var connection = new WebSocket('ws://180.97.203.111:6002');
+
+        connection.onopen = function () {
+            content.html($('<p>', {
+                text: 'The page is connected to the WebSocket server'
+            }));
+        };
+
+        connection.onerror = function (error) {
+            // just in there were some problems with conenction...
+            content.html($('<p>', {
+                text: 'Sorry, but there\'s some problem with your '
+                + 'connection or the server is down.'
+            }));
+        };
+
+        $("#button").click(function(){
+            connection.send($("#input").val())
+        })
+
+        connection.onmessage = function (message) {
+            try {
+                var json = JSON.parse(message.data);
+            } catch (e) {
+                console.log('This doesn\'t look like a valid JSON: ', message.data);
+                return;
+            }
+
+            if (json.type === 'message') { // it's a single message
+                content.append(json.data.text);
+                 content.append('\r\n');
+                
+            } else {
+                console.log('Hmm..., I\'ve never seen JSON like this: ', json);
+            }
+        }
+    </script>
 </body>
 
 </html>
