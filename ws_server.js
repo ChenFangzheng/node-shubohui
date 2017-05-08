@@ -53,8 +53,7 @@ wsServer.on('request', function (request) {
     // client is connecting from your website
     // (http://en.wikipedia.org/wiki/Same_origin_policy)
     var connection = request.accept(null, request.origin);
-    // we need to know client index to remove them on 'close' event
-    var index = clients.push(connection) - 1;
+    clients.push(connection);
 
     console.log((new Date()) + ' Connection accepted.');
 
@@ -81,10 +80,15 @@ wsServer.on('request', function (request) {
 
     // user disconnected
     connection.on('close', function (connection) {
-        console.log((new Date()) + " Peer "
-            + connection.remoteAddress + " disconnected.");
-        // remove user from the list of connected clients
-        clients.splice(index, 1);
+
+        for (var cIndex = 0; cIndex < clients.length; cIndex++) {
+            if (clients[cIndex] && clients[cIndex].state != "open") {
+                clients.splice(cIndex, 1);
+                console.log((new Date()) + " Peer "
+                    + cIndex + " disconnected.");
+            }
+        }
+
     });
 
 });
