@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}/ws_server.js",
+            "program": "${workspaceRoot}/bin/www",
             "cwd": "${workspaceRoot}"
         },
         {
