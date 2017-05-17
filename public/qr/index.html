@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>jQuery.qrcode 0.14.0 · Demo</title>
+    <meta name="description" content="demo for jQuery.qrcode (https://larsjung.de/jquery-qrcode/)">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link href="//fonts.googleapis.com/css?family=Ubuntu:300,400,700" rel="stylesheet">-->
+    <!--<link href="styles.css" rel="stylesheet">-->
+    <script src="./demo/jquery.min.js"></script>
+    <script src="./jquery-qrcode-0.14.0.js"></script>
+    <style>
+        img {
+            hidden: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+    </div>
+</body>
+<script>
+    setTimeout(update, 300);
+    var img = new Image();
+    img.src = "../images/iss.PNG";
+
+    function update() {
+        var url = 'http://180.97.203.111:6001/mobile.html?'
+            + "first=" + encodeURIComponent("北京")
+            + "&second=" + encodeURIComponent("天津")
+            + "&third=" + encodeURIComponent("深圳");
+        var options = {
+            render: 'image',//展现形式div image canvas
+            ecLevel: 'H', //容错H,Q,M,L
+            minVersion: 6,
+
+            fill: '#333', //填充颜色
+            background: '#fff',//背景色
+
+            text: url,//待编码文本
+            size: 400,//二维码大小
+            radius: 50 * 0.01,
+            quiet: 1,
+            mode: 4,
+            mSize: 11 * 0.01,
+            mPosX: 50 * 0.01,
+            mPosY: 50 * 0.01,
+
+            label: "",//二维码中间安文字
+            fontname: "",//字体
+            fontcolor: "",// 颜色
+            image: img//$('#img-buffer')[0]
+        };
+
+        $('#container').empty().qrcode(options);
+    }
+
+</script>
+
+</html>
